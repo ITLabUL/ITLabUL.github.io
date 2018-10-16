@@ -1,0 +1,856 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>Workshop Firebase &#43; Android</title>
+  <script src="../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <link rel="import" href="../../elements/codelab.html">
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <style is="custom-style">
+    body {
+      font-family: "Roboto",sans-serif;
+      background: var(--google-codelab-background, #F8F9FA);
+    }
+  </style>
+  
+</head>
+<body unresolved class="fullbleed">
+
+  <google-codelab title="Workshop Firebase &#43; Android"
+                  environment="web"
+                  feedback-link="https://github.com/googlecodelabs/your-first-pwapp/issues">
+    
+      <google-codelab-step label="Resumen" duration="0">
+        <table>
+<tr><td colspan="1" rowspan="1"><p><img style="max-width: 298.00px" src="img/2058c0ca690e8cc.png"></p>
+</td></tr>
+</table>
+<table>
+<tr><td colspan="1" rowspan="1"><p><img style="max-width: 298.00px" src="img/3dedfdc7fc69efe2.png"></p>
+</td><td colspan="1" rowspan="1"><p><img style="max-width: 298.00px" src="img/40546b0fdd11f22c.png"></p>
+</td></tr>
+</table>
+<p>Bienvenidos al workshop de Firebase + Android workshop. En este workshop, aprenderás como usar la plataforma de Firebase que podria ayudarte en el desarrollo de tu aplicacion Android. En este workshop implementaremos un inicio de sesion, implementacion de base de datos en tiempo real, notificaciones y algunas librerias de machine learning que nos proporciona Firebase</p>
+<h2><strong>Que aprenderas?</strong></h2>
+<ul>
+<li>Permitir que los usuarios puedan iniciar sesión.</li>
+<li>Implementar una base de datos, ingresar data y visualizarlo en la aplicación en modo de lista.</li>
+<li>Recibir notificaciones en la aplicación.</li>
+<li>Implementar las librerías de machine learning  reconocimiento de texto y de caras.</li>
+</ul>
+<h2><strong>Qué necesitas?</strong></h2>
+<ul>
+<li>Android Studio 3.0+</li>
+<li>El código de ejemplo.</li>
+<li>Un dispositivo Android con la versión 4.0+ y con Google Play Services 9.8 o posterior, o un emulador con Google Play Services 9.8 o posterior.</li>
+<li>Si usas un dispositivo, un cable para conectarlo.</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Obtén el código de ejemplo" duration="0">
+        <p>Clona el repositorio desde GitHub con el siguiente línea de comando.</p>
+<pre><code>git clone https://github.com/itlab/firebase-example</code></pre>
+<aside class="special"><p>El repositorio &#34;firebase-example&#34; tiene las siguientes carpetas:</p>
+<ul>
+<li><img style="max-width: 20.00px" src="img/bb745dc85ae69f6b.png"><strong>android-start</strong>—Es el codigo para comenzar con el codelab.</li>
+<li><img style="max-width: 20.00px" src="img/bb745dc85ae69f6b.png"><strong>android-LogIn-Complete</strong>—Es el código completo del iniciar sesión.</li>
+<li><img style="max-width: 20.00px" src="img/bb745dc85ae69f6b.png"><strong>android-Database-Complete</strong>—Es el código completo de la lista de contactos.</li>
+<li><img style="max-width: 20.00px" src="img/bb745dc85ae69f6b.png"><strong>android-Notificacion-Complete</strong>—Es el código completo para realizar el envío de las notificaciones.</li>
+<li><img style="max-width: 20.00px" src="img/bb745dc85ae69f6b.png"><strong>android-MLKit-Complete</strong>—Es el código completo para realizar la identificación de caras por medio de imágenes realizados mediante la cámara.</li>
+</ul>
+<p>Nota: Si quieres ejecutar la aplicación terminada, deberás crear un proyecto en la consola de Firebase  If you want to run the finished app, you have to create a project in the Firebase console corresponding to the package name and SHA1. See <a href="https://codelabs.developers.google.com/codelabs/firebase-android/#3" target="_blank">Create Firebase Console Project</a> for the command. Also you will have to enable Google as an Auth Provider; do this in the Authentication section of the Firebase console.</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Implementar Iniciar Sesión" duration="0">
+        <p>La mayoría de las apps necesitan identificar a los usuarios. Conocer la identidad de un usuario permite que una app guarde sus datos en la nube de forma segura y proporcione la misma experiencia personalizada en todos los dispositivos del usuario.</p>
+<p>Firebase Authentication proporciona servicios de backend, SDK fáciles de usar y bibliotecas de IU ya elaboradas para autenticar a los usuarios en tu aplicación. Admite la autenticación mediante contraseñas, números de teléfono, proveedores de identidad federados populares, como Google, Facebook y Twitter, y mucho más.</p>
+<p>Firebase Authentication se integra estrechamente con otros servicios de Firebase y aprovecha los estándares de la industria como OAuth 2.0 y OpenID Connect, por lo que se puede integrar fácilmente con tu backend personalizado.</p>
+<p><strong>Funciones Principales</strong></p>
+<ul>
+<li><strong>Se integra</strong> con otras funciones de Firebase.</li>
+<li><strong>Usa estándares de la industria</strong>, como OAuth 2.0 y OpenID Connect, para que pueda integrarse fácilmente a tu sistema back-end personalizado.</li>
+<li><strong>Ofrece dos opciones de desarrollo</strong>, ya sea FirebaseUI como una solución de autenticación fácil de implementar o el SDK de Firebase Authentication para integrar de forma manual uno o varios métodos de acceso a tu app.</li>
+<li><strong>Brinda autenticación segura</strong> que facilita el acceso de los usuarios mediante su cuenta de Google en la que ya usan Gmail, Google Play, Google+ y otros servicios de Google. También admite la autenticación por contraseñas y proveedores de identidad populares como Facebook y Twitter.</li>
+<li><strong>Ofrece una experiencia en la app sin dificultades entre dispositivos y en tu sitio web</strong> de manera segura y con un consentimiento único. De esta forma, mantendrás comprometidos a tus usuarios independientemente del dispositivo que utilicen.</li>
+<li><strong>Conecta a los usuarios de forma segura con los servicios de Google</strong>. Comparte con Contactos de Google, guarda archivos en Drive, agrega eventos a Calendario y mucho más.</li>
+</ul>
+<p><strong>Instalar Firebase SDK</strong></p>
+<p>Modificar algunas reglas en el archivo build.gradle de nivel raiz:</p>
+<p>Reemplaza estas lineas</p>
+<pre><code>buildscript{
+     // ...
+     dependecies{
+         // ...
+         // google-services plugin
+     }
+}
+
+allprojects{
+     // ...
+     reositories{
+         // ...
+         // Google&#39;s Maven repository
+     }
+}</code></pre>
+<p>Por esta</p>
+<pre><code>buildscript{
+     // ...
+     dependecies{
+         // ...
+         classpath &#39;com.google.gms:google-services:4.1.0&#39;
+     }
+}
+
+allprojects{
+     // ...
+     reositories{
+         // ...
+         google()
+     }
+}
+</code></pre>
+<p>Luego, en el archivo Gradle de tu módulo (generalmente, app/build.gradle), agrega la línea apply plugin en la parte inferior del archivo para habilitar el complemento de Gradle:</p>
+<p>Reemplaza estas líneas</p>
+<pre><code>apply plugin: &#39;com.android.application&#39;
+
+android {
+  // ...
+}
+
+dependencies {
+  // ...
+  // Add dependency firebase-core
+
+  // Getting a &#34;Could not find&#34; error? Make sure you have
+  // added the Google maven respository to your root build.gradle
+}
+
+// Add plugin google-services
+</code></pre>
+<p>Por estas</p>
+<pre><code>apply plugin: &#39;com.android.application&#39;
+
+android {
+  // ...
+}
+
+dependencies {
+  // ...
+  implementation &#39;com.google.firebase:firebase-core:16.0.4&#39;
+
+  // Getting a &#34;Could not find&#34; error? Make sure you have
+  // added the Google maven respository to your root build.gradle
+}
+
+// ADD THIS AT THE BOTTOM
+apply plugin: &#39;com.google.gms.google-services&#39;
+</code></pre>
+<p><strong>Añadir Firebase Authentication</strong></p>
+<p>Añadir dependencia para autenticación en el archivo build.gradle:</p>
+<p>Reemplazar esta línea</p>
+<pre><code>// Añadir dependencia de Firebase Authentication
+</code></pre>
+<p>Por esta</p>
+<pre><code>implementation &#39;com.google.firebase:firebase-auth:16.0.4&#39;
+</code></pre>
+<p><strong>Añadir aplicación a Firebase console</strong></p>
+<ol type="1" start="1">
+<li>Loguearse en firebase console con tu cuenta de correo de Gmail</li>
+<li>En la pantalla de inicio de Firebase Console, dar click en el botón &#34;Agregar proyecto&#34;</li>
+</ol>
+<p><img style="max-width: 404.50px" src="img/f2cdadcce84d2c41.png"></p>
+<ol type="1" start="3">
+<li>En el pop-up emergente, realizar la siguiente configuración:</li>
+</ol>
+<p><img style="max-width: 375.50px" src="img/22a8566d7de06e1.png"></p>
+<ol type="1" start="4">
+<li>Una vez realizada la creación del proyecto, se abrirá la página de inicio del proyecto en firebase. En esta se deberá añadir el proyecto que estamos desarrollando, para lo cual debemos hacer click en el icono Android que se muestra a continuación:</li>
+</ol>
+<p><img style="max-width: 455.03px" src="img/e35ab0993bb2637d.png"></p>
+<ol type="1" start="5">
+<li>A continuación, se mostrará un formulario con 4 pasos, en el primero solo debemos agregar el nombre del paquete de la aplicación. El cual se muestra en el archivo AndroidManifest.xml.</li>
+</ol>
+<p><img style="max-width: 624.00px" src="img/b96e91fa80f12d1f.png"></p>
+<p><img style="max-width: 431.18px" src="img/817311226c9ce594.png"></p>
+<ol type="1" start="6">
+<li>Descargar el archivo de configuración google-services.json y posteriormente colocarlo en tu proyecto de la siguiente manera</li>
+</ol>
+<p><img style="max-width: 378.50px" src="img/d52cef6d738bd789.png"></p>
+<p><img style="max-width: 481.50px" src="img/bf9cfd871fe86d44.png"></p>
+<p><strong>Loguear usuario con Firebase</strong></p>
+<p>Para poder probar las distintas funcionalidades de la aplicación, lo primero que se debe hacer es loguearse en la aplicación, para que esto pueda ser posible, en la clase LoginPresenter vamos a reemplazar el siguiente código:</p>
+<p>Reemplazar esta línea</p>
+<pre><code>// Declarar instancia de FirebaseAuth
+</code></pre>
+<p>Por esta</p>
+<pre><code>private val mAuth = FirebaseAuth.getInstance()
+</code></pre>
+<p>Reemplazar esta línea</p>
+<pre><code>// Logear usuario en firebase
+</code></pre>
+<p>Por estas</p>
+<pre><code>if (!email.isEmpty() &amp;&amp; !password.isEmpty()) {
+            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(view) { task -&gt;
+                run {
+                    if (task.isSuccessful) {
+                        view.correctLogin()
+                    } else {
+                        view.incorrectLogin(&#34;Fallo de autenticación&#34;)
+                    }
+                }
+            }
+        } else {
+            view.incorrectLogin(&#34;Ingresar credenciales&#34;)
+
+}
+</code></pre>
+<p>Reemplazar esta línea</p>
+<pre><code>// verificar si el usuario ya esta logueado
+</code></pre>
+<p>Por estas</p>
+<pre><code>if (mAuth.currentUser != null) {
+            view.correctLogin()
+}
+</code></pre>
+<p><strong>Registrar usuario con Firebase</strong></p>
+<p>Para poder realizar login a la aplicación, primero debemos tener una cuenta registrada. Para ello se deberán realizar las siguientes modificaciones al código de la aplicación en la clase RegisterPresenter.</p>
+<p>Reemplazar esta línea</p>
+<pre><code>// Declarar instancia de FirebaseAuth
+</code></pre>
+<p>Por esta</p>
+<pre><code>private val mAuth = FirebaseAuth.getInstance()!!
+</code></pre>
+<p>Reemplazar esta línea</p>
+<pre><code>// Verificar el registro del usuario
+</code></pre>
+<p>Por estas</p>
+<pre><code>       if (!name.isEmpty() &amp;&amp; !password.isEmpty() &amp;&amp; !email.isEmpty()) {
+            mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(view, {
+                task -&gt;
+                run {
+                    if (task.isSuccessful) {
+                        // val values = toHashMap(name, email)
+                        // createUserDBReference(task.result!!.user.uid, values)
+                        view.correctRegister()
+                    } else {
+                        Log.i(&#34;Error&#34;,task.exception.toString())
+                        view.incorrectRegister(&#34;Error en el registro&#34;)
+                    }
+                }
+            })
+
+        } else {
+            view.incorrectRegister(&#34;Ingresar credenciales&#34;)
+}</code></pre>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Creación de una lista de contactos" duration="0">
+        <p>Firebase brinda servicios de base de datos en tiempo real con soporte para plataformas Android, iOS y Web. Este servicio es en tiempo real y bastante fácil de usar.  Además, la información también permanece en el dispositivo cuando este se queda desconectado del internet, ya que se almacena en el disco. También utilizaremos Firebase Storage que te permite almacenar imágenes y videos pesados.</p>
+<p><strong>Como funciona? </strong></p>
+<p>Firebase Realtime Database te permite compilar aplicaciones ricas y colaborativas, ya que permite el acceso seguro a la base de datos directamente desde el código del cliente. Los datos persisten de forma local. Además, incluso cuando no hay conexión, se siguen activando los eventos en tiempo real, lo que proporciona una experiencia adaptable al usuario final. Cuando el dispositivo vuelve a conectarse, Realtime Database sincroniza los cambios de los datos locales con las actualizaciones remotas que ocurrieron mientras el cliente estuvo sin conexión, lo que combina los conflictos de forma automática.</p>
+<p>Realtime Database proporciona un lenguaje flexible de reglas basadas en expresiones, llamado reglas de seguridad de Firebase Realtime Database, para definir cómo se deberían estructurar los datos y en qué momento se pueden leer o escribir. Integrar Firebase Authentication permite que los programadores definan quién tiene acceso a qué datos y cómo acceden a ellos.</p>
+<p>Realtime Database es una base de datos NoSQL y, como tal, tiene diferentes optimizaciones y funcionalidades en comparación con una base de datos relacional. La API de Realtime Database está diseñada para permitir solo operaciones que se puedan ejecutar rápidamente. Eso permite crear una excelente experiencia de tiempo real que puede servir a millones de usuarios sin afectar la capacidad de respuesta. Es importante pensar cómo deben acceder a los datos los usuarios y estructurarlos según corresponda.</p>
+<p>Fuente: <a href="https://firebase.google.com/docs/database/" target="_blank">Documentación de Firebase</a></p>
+<h2><strong>Instalar el Firebase Database en tu aplicación Android</strong></h2>
+<ul>
+<li>Si aún no lo hiciste, <a href="https://firebase.google.com/docs/android/setup?authuser=2&hl=es-419" target="_blank">agrega Firebase a tu proyecto de Android</a>.</li>
+<li>En Android Studio, agrega la dependencia de FCM al archivo build.gradle de nivel de tu app:</li>
+</ul>
+<pre><code>dependencies {
+   implementation &#39;com.google.firebase:firebase-database:16.0.3&#39;
+   implementation &#39;com.firebaseui:firebase-ui-storage:4.1.0&#39;
+   implementation &#39;com.google.firebase:firebase-storage:16.0.3&#39;
+}</code></pre>
+<p><strong>Estructura de la BD:</strong></p>
+<p>En este caso, los keys de usuario y contacts contendrán listas de datos donde se utilizaran los identificadores de cada persona como los keys para un acceso más fácil y rápido.</p>
+<p><img style="max-width: 624.00px" src="img/48a05a97af8c21e2.png"></p>
+<p><strong>Registrar al usuario en la BD</strong></p>
+<p>Al registrar al usuario en la aplicación, vamos a crearle una entrada en la base de datos con su UID (Unique Identifier). Ubiquémonos en la siguiente ruta:</p>
+<p><img style="max-width: 333.50px" src="img/98ad0a9e05dde53a.png"></p>
+<p>En el <code>RegisterPresenter</code> vamos a reemplazar el siguiente código:</p>
+<pre><code>//Firebase Database reference</code></pre>
+<p>Por este:</p>
+<pre><code>//Firebase Database reference
+val db = FirebaseDatabase.getInstance().reference</code></pre>
+<p>Esta es la referencia a la base de datos de nuestra aplicación que nos permite acceder a los datos contenidos en ella.</p>
+<p>Seguido de esto creamos nuestra primera escritura a la base de datos con los datos del usuario, que ya se encuentran almacenados en un objeto tipo HashMap. Reemplacemos el siguiente código:</p>
+<pre><code>//Firebase Write Data</code></pre>
+<p>Por este:</p>
+<pre><code>//Firebase Write Data
+db.child(&#34;users/$uid&#34;).setValue(values)</code></pre>
+<p>Aquí se crean los valores del nombre del usuario y su correo electrónico asociado a la cuenta. </p>
+<p><strong>Leer la data de los contactos</strong></p>
+<p>Vamos a implementar una lista de contactos simple con 4 datos: nombre, correo, teléfono y imágen de referencia (Esta última es opcional). En el archivo <code>TimelinePresenter.kt</code> reemplacemos esta parte del código:</p>
+<pre><code>//Firebase Database and Auth Reference</code></pre>
+<p>Por este:</p>
+<pre><code>//Firebase Database and Auth Reference
+private val db = FirebaseDatabase.getInstance().reference
+private val uid = FirebaseAuth.getInstance().currentUser!!.uid
+</code></pre>
+<p>Estas son las referencias a la base de datos de nuestra aplicación y al servicio de autentificación del cual obtenemos el uid del usuario actual.</p>
+<p>Una vez hecho esto, podemos empezar con la lectura de datos. Se debe reemplazar esta línea de código:</p>
+<pre><code>//Firebase Database Read</code></pre>
+<p>Por esta:</p>
+<pre><code>//Firebase Database Read
+db.child(&#34;users/$uid/contacts&#34;).addValueEventListener(object : ValueEventListener {
+   override fun onDataChange(p0: DataSnapshot) {
+       val contacts = ArrayList&lt;Contact&gt;()
+       if (p0.value != null) {
+           p0.children.forEach { dataSnapshot -&gt;
+               run {
+                   val name = dataSnapshot.child(&#34;name&#34;).value as String
+                   val number = dataSnapshot.child(&#34;number&#34;).value as String
+                   val email = dataSnapshot.child(&#34;email&#34;).value as String
+                   val imagePath = dataSnapshot.child(&#34;imagePath&#34;).value as String
+
+                   val contact = Contact(name, number, email, imagePath)
+                   contacts.add(contact)
+               }
+           }
+           view.onContactsReady(contacts)
+       }
+   }
+
+   override fun onCancelled(p0: DatabaseError) {
+       Log.e(&#34;Test:&#34;, p0.toString())
+   }
+})</code></pre>
+<p>Aquí se adjunta un listener a la referencia de la BD para &#34;escuchar&#34; los valores de los contactos del usuario, que se encuentran en la ruta <code>&#34;users/$uid/contacts&#34;</code>. Cada vez que se registra un cambio de valor o la agregación de nuevos valores a la lista de contactos se ejecuta la función <code>onDataChange(p0: DataSnapshot)</code> donde se crea una lista de Contactos, un objeto para almacenar los valores mencionados anteriormente.</p>
+<p><strong>Crear un nuevo Contacto</strong></p>
+<p>Ahora vamos a crear la parte más importante de la aplicación: la creación de contactos. Para esto, en el archivo <code>FormPresenter.kt</code> creemos las referencias a la BD y al Storage de Firebase. Además, obtengamos el UID del usuario y creamos un nuevo uid para el contacto. Reemplacemos este código:</p>
+<pre><code>///Firebase References and UIDs</code></pre>
+<p>Por este:</p>
+<pre><code>///Firebase References and UIDs
+private val db = FirebaseDatabase.getInstance().reference
+private val storage = FirebaseStorage.getInstance().reference
+private val uidUser = FirebaseAuth.getInstance().currentUser!!.uid
+private val uidContact = UUID.randomUUID().toString()
+private val path = &#34;users/$uidUser/contacts/$uidContact&#34;</code></pre>
+<p>Seguido de esto, al igual que al registrar, creamos el código de guardar un contacto. Reemplacemos este código:</p>
+<pre><code>//Firebase Write</code></pre>
+<p>Por este:</p>
+<pre><code>//Firebase Write
+db.child(path).setValue(values)
+view.onContactSaved()</code></pre>
+<p>Por último, tenemos que realizar el código con el cual se cargara la imagen al Firebase Storage. Reemplacemos este código:</p>
+<pre><code>//Firebase Storage Image Upload</code></pre>
+<p>Por este:</p>
+<pre><code>//Firebase Storage Image Upload
+val imageRef = storage.child(path)
+val baos = ByteArrayOutputStream()
+image!!.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+val data = baos.toByteArray()
+
+imageRef.putBytes(data).addOnSuccessListener {
+   view.onImageUploaded(imageRef.path)
+}.addOnFailureListener { exception -&gt;
+   Log.e(&#34;Firebase Storage Error&#34;, exception.localizedMessage)
+}</code></pre>
+<p>Este código es nuevo, por lo cual vamos a explicar su función. Primero, se crea una referencia a la locación donde se almacenará la imagen, la cual tendrá la misma dirección que en la BD, la cual se encuentra almacenada en la variable <code>path</code>. Después de comprimirla para reducir el espacio de almacenamiento, la imagen se transforma en un Array de Bytes y se realiza el upload de la imagen a Firebase.</p>
+<p><strong>Imagenes</strong></p>
+<p>Por último, las imágenes las manejaremos con una librería llamada Glide que se puede utilizar directo con objetos de Firebase. Para esto en el archivo <code>GlideModuleStorage</code> (Lo pueden encontrar en la carpeta Util) reemplacen las siguientes lineas de codigo:</p>
+<pre><code>// Register FirebaseImageLoader to handle StorageReference</code></pre>
+<p>Por estas:</p>
+<pre><code>// Register FirebaseImageLoader to handle StorageReference
+registry.append(StorageReference.class, InputStream.class,
+       new FirebaseImageLoader.Factory());</code></pre>
+<p>En el archivo <code>ContactAdapter</code> reemplacemos las siguientes lineas de código:</p>
+<pre><code>//Firebase Storage reference</code></pre>
+<p>Por este:</p>
+<pre><code>//Firebase Storage reference
+private val storage = FirebaseStorage.getInstance().reference</code></pre>
+<p>Y esta:</p>
+<pre><code>//Firebase Storage UI Glide</code></pre>
+<p>Por estas:</p>
+<pre><code>//Firebase Storage UI Glide
+Glide.with(context)
+       .load(storage.child(contact.image!!))
+       .into(p0.ivContact)</code></pre>
+<p>Ahora todo está listo y pueden compilar la aplicación en su dispositivo para probar los servicios de storage y database de Firebase. </p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Envío de notificaciones" duration="0">
+        <p>Firebase Cloud Messaging (FCM) es una solución de mensajería multiplataforma que te permite enviar mensajes de forma segura y gratuita.</p>
+<p>Con FCM, puedes notificar a una app cliente que un correo electrónico nuevo o que otros datos están disponibles para la sincronización. Puedes enviar mensajes de notificación para volver a atraer a más usuarios y aumentar su retención. Para los casos prácticos de mensajería instantánea, un mensaje puede transferir una carga de hasta 4 KB a una app cliente.</p>
+<h2>Cómo funciona</h2>
+<p>Una implementación de FCM incluye dos componentes principales para enviar y recibir datos:</p>
+<ol type="1" start="1">
+<li>un entorno de confianza como Cloud Functions para Firebase o un servidor de apps para generar, orientar y enviar mensajes</li>
+<li>una app cliente de iOS, Android o Web (JavaScript) que reciba mensajes</li>
+</ol>
+<h2>Configurar una app cliente de Firebase Cloud Messaging en Android</h2>
+<ol type="1" start="1">
+<li>Si aún no lo hiciste, <a href="https://firebase.google.com/docs/android/setup?authuser=2&hl=es-419" target="_blank">agrega Firebase a tu proyecto de Android</a>.</li>
+<li>En Android Studio, agrega la dependencia de FCM al archivo build.gradle de nivel de tu app:</li>
+</ol>
+<pre><code>dependencies {
+   implementation &#34;com.google.firebase:firebase-messaging:17.3.2&#34;
+}</code></pre>
+<h2><strong>Creando el servicio de Firebase</strong></h2>
+<p>El siguiente paso es crear dos servicios. Uno manejará el proceso de registro del dispositivo y el otro manejará la recepción de las notificaciones reales.</p>
+<p>Vaya a su archivo <strong>AndroidManifest.xml</strong> y agregue el siguiente código dentro de la etiqueta <strong>&lt;application&gt;</strong>:</p>
+<pre><code>&lt;service android:name=&#34;.notifications.NotificationService&#34;
+   android:permission=&#34;com.google.android.c2dm.permission.SEND&#34;&gt;
+   &lt;intent-filter&gt;
+       &lt;action android:name=&#34;com.google.firebase.MESSAGING_EVENT&#34; /&gt;
+       &lt;action android:name=&#34;com.google.android.c2dm.intent.RECEIVE&#34; /&gt;
+   &lt;/intent-filter&gt;
+&lt;/service&gt;</code></pre>
+<p>El código anterior representa la declaración del servicio dentro de nuestra aplicación, que nos permitirá ejecutar nuestro servicio apenas la aplicación inicie, y se mantendrá activo incluso si la aplicación es cerrada.</p>
+<p>Dentro de la misma <strong>&lt;application&gt; </strong>etiqueta también puede agregar metadatos para los valores de notificación predeterminados, pero es opcional:</p>
+<pre><code>&lt;meta-data
+   android:name=&#34;com.google.firebase.messaging.default_notification_icon&#34;
+   android:resource=&#34;@drawable/ic_stat_ic_notification&#34; /&gt;
+&lt;meta-data
+   android:name=&#34;com.google.firebase.messaging.default_notification_color&#34;
+   android:resource=&#34;@color/colorAccent&#34; /&gt;</code></pre>
+<p>Lo último que debe agregar a su archivo de manifiesto (<strong>AndroidManifest.xml)</strong> es el permiso <strong>RECEIVE</strong>, el cual es necesario para permitir el funcionamiento del servicio:</p>
+<pre><code>&lt;uses-permission android:name=&#34;com.google.android.c2dm.permission.RECEIVE&#34; /&gt;</code></pre>
+<h2><strong>Configurando el servicio</strong></h2>
+<p>A continuación, agregue una clase Kotlin que declaró en el archivo manifiesto en un nuevo paquete llamado <strong>notifications</strong>.</p>
+<p>Esta es la implementación de la clase <strong>NotificationService</strong>:</p>
+<pre><code>/************************************************************************
+   *
+   * Code required to start the codelab
+   *
+   *    ************************************************************************/
+
+class NotificationService : FirebaseMessagingService() {
+   private val DEMO_CHANNEL_ADMIN_ID = &#34;el.id.de.tu.app.channel_demo&#34;
+   private lateinit var notificationManager: NotificationManager
+
+}</code></pre>
+<p>El código arriba inicia con la implementación de la clase <strong>NotificationService</strong> y primero se declara una variable de nombre <strong>DEMO_CHANNEL_ADMIN_ID </strong>la cual más adelante nos servirá para crear un nuevo canal de notificación para las notificaciones que recibiremos en la app y además se declara una variable de nombre <strong>notificationManager</strong> que creará una instancia de la clase <strong>NotificationManager</strong>, la cual nos servirá más adelante para tratar las notificaciones que llegarán a nuestra app.</p>
+<p>El siguiente paso es programar el siguiente código dentro de la implementación de la clase <strong>NotificationService</strong> e inmediatamente después de la declaración de la variable <strong>notificationManager</strong>.</p>
+<pre><code>override fun onNewToken(token: String) {
+   super.onNewToken(token)
+   Log.v(&#34;AuthFirebase&#34;, &#34;Refreshed token: $token&#34;)
+}</code></pre>
+<p>Quedando de esta manera:</p>
+<pre><code>class NotificationService : FirebaseMessagingService() {
+
+   private val DEMO_CHANNEL_ADMIN_ID = &#34;el.id.de.tu.app.channel_demo&#34;
+   private var notificationManager: NotificationManager? = null
+
+   override fun onNewToken(token: String) {
+       super.onNewToken(token)
+       Log.v(&#34;AuthFirebase&#34;, &#34;Refreshed token: $token&#34;)
+   }
+}</code></pre>
+<p>El código arriba implementa el evento <strong>onNewToken</strong> el cual obtiene un token de Firebase, creando así la conexión entre el dispositivo y Firebase. A través de este token, puede enviar notificaciones a este dispositivo específico.</p>
+<p>Este token podría servirnos para, por ejemplo, enviarlo a un servicio y guardarlo en una base de datos generando una lista de posibles destinatarios específicos de nuestra aplicación.</p>
+<p>Luego de implementar el evento programamos el siguiente código:</p>
+<pre><code>override fun onMessageReceived(remoteMessage: RemoteMessage) {
+   notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+   val notificationId = Random().nextInt(60000) + (System.currentTimeMillis() and 0xfffffff).toInt()
+
+   val title = remoteMessage.notification?.title
+   val message = remoteMessage.notification?.body
+
+   val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+
+   val notificationBuilder = NotificationCompat.Builder(this, DEMO_CHANNEL_ADMIN_ID)
+           .setSmallIcon(R.drawable.ic_notifications_active)
+           .setContentTitle(title)
+           .setContentText(message)
+           .setAutoCancel(true)
+           .setSound(defaultSoundUri)
+
+   notificationManager.notify(notificationId, notificationBuilder.build())
+}</code></pre>
+<p>Aquí, para recibir notificaciones únicas cada vez que reciba un nuevo mensaje, para efectos de este codelab, generamos un número aleatorio y lo usamos como ID de notificación. Con esta identificación, se pueden hacer varias cosas con las notificaciones. Como tal, probablemente se deberían agrupar si son del mismo tipo, o actualizarlas. Si desea ver cada notificación individualmente de las demás, sus ID deben ser diferentes.</p>
+<p>Luego se declaran dos variables: una de nombre title para recibir el título de la notificación, y otra de nombre message para recibir el mensaje de la notificación. Adicionalmente se declara una variable <strong>defaultSoundUri</strong> para que un sonido por defecto se reproduzca cuando la notificación llegue.</p>
+<p>Ahora concentrémonos en esta parte:</p>
+<pre><code>val notificationBuilder = NotificationCompat.Builder(this, DEMO_CHANNEL_ADMIN_ID)
+       .setSmallIcon(R.drawable.ic_notifications_active)
+       .setContentTitle(title)
+       .setContentText(message)
+       .setAutoCancel(true)
+       .setSound(defaultSoundUri)
+</code></pre>
+<p>Lo que se está realizando aquí es construir una notificación en el área de notificaciones de Android con los datos recibidos de Firebase. Al construir una notificación, hacemos uso de <strong>NotificationCompat</strong>.<strong>Builder </strong>asignando la variable de configuración <strong>DEMO_CHANNEL_ADMIN_ID</strong> asignada pasos atrás, indicando si queremos, como en este ejemplo:</p>
+<ul>
+<li>Hacer que nuestra notificación tenga un icono, con el método <strong>setSmallIcon</strong>.</li>
+<li>Darle un título a la notificación, con el método <strong>setContentTitle</strong>.</li>
+<li>Darle el contenido del mensaje a la notificación, con el método <strong>setContentText</strong>.</li>
+<li>Indicar que la notificación se desvanecerá una vez se toque sobre ella aplicando el valor <strong>true</strong> al método <strong>setAutoCancel</strong>.</li>
+<li>Indicar el sonido de la notificación.</li>
+</ul>
+<p>Luego de ello, se procede a agregar la notificación recién construida al centro de notificaciones de Android, a través de las siguientes líneas de código.</p>
+<pre><code>notificationManager.notify(notificationId, notificationBuilder.build())</code></pre>
+<p>El código de la clase <strong>NotificationService</strong> finalmente debería quedar de la siguiente forma:</p>
+<pre><code>class NotificationService : FirebaseMessagingService() {
+   private val DEMO_CHANNEL_ADMIN_ID = &#34;com.example.itlab.authenticationfirebaseapp.channel_demo&#34;
+   private lateinit var notificationManager: NotificationManager
+
+   override fun onNewToken(token: String) {
+       super.onNewToken(token)
+       Log.v(&#34;AuthFirebase&#34;, &#34;Refreshed token: $token&#34;)
+   }
+
+   override fun onMessageReceived(remoteMessage: RemoteMessage) {
+       notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+       val notificationId = Random().nextInt(60000) + (System.currentTimeMillis() and 0xfffffff).toInt()
+
+       val title = remoteMessage.notification?.title
+       val message = remoteMessage.notification?.body
+
+       val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+
+       val notificationBuilder = NotificationCompat.Builder(this, DEMO_CHANNEL_ADMIN_ID)
+               .setSmallIcon(R.drawable.ic_notifications_active)
+               .setContentTitle(title)
+               .setContentText(message)
+               .setAutoCancel(true)
+               .setSound(defaultSoundUri)
+
+       notificationManager.notify(notificationId, notificationBuilder.build())
+   }
+
+}
+
+</code></pre>
+<h2>Probando nuestra aplicación</h2>
+<p>Para probar la aplicación haremos click en el menú &#34;Run&#34; y luego en &#34;Run app&#34;. La aplicación deberá ejecutarse en nuestro dispositivo asignado.</p>
+<p>Luego ingresamos a la consola de Firebase y nos dirigimos a la sección de &#34;Crece&#34;, luego hacemos click en &#34;<strong>Cloud Messaging</strong>&#34;, nos deberá mostrar la siguiente pantalla: </p>
+<p><img style="max-width: 624.00px" src="img/d6a071a729334372.png"></p>
+<p>Haremos click en &#34;<strong>Envía tu primer mensaje</strong>&#34;, nos mostrará lo siguiente:</p>
+<p><img style="max-width: 624.00px" src="img/36914757fa9e6b54.png"></p>
+<p>Este formulario nos permitirá crear un nuevo mensaje para probar si nuestra aplicación realmente estará recibiendo las notificaciones. En el campo &#34;<strong>Ingresar mensaje</strong>&#34; digite un mensaje a su gusto.</p>
+<p>Opcionalmente puede ingresar un sobrenombre o alias al mensaje para identificarlo en el listado de mensajes que aparecerá cuando este mensaje haya sido enviado.</p>
+<p>En la parte inferior encontraremos lo siguiente:</p>
+<p><img style="max-width: 624.00px" src="img/ceb7b544b2c0eb78.png"></p>
+<p>Esta sección del formulario nos indica hacia qué destino se enviará el mensaje, existiendo para esto tres tipos de destino:</p>
+<ul>
+<li><strong>Segmento de usuario: </strong>Esta opción nos permitirá enviar una notificación a todos los usuarios de la aplicación o un segmento en específico.</li>
+<li><strong>Tema:</strong> Mecanismo Pub/Sub para enviar notificaciones a los suscriptores. Esta opción nos permitirá enviar notificaciones a sólo los usuarios suscritos a un tema.</li>
+<li><strong>Dispositivo único:</strong> Esta opción sirve en caso sepamos el identificador de Firebase de un dispositivo o usuario en específico.</li>
+</ul>
+<p>Para efectos de este codelab, dejaremos seleccionada la opción &#34;<strong>Segmento de usuarios</strong>&#34;.</p>
+<p>A continuación daremos click en el campo &#34;<strong>Seleccionar app</strong>&#34; y seleccionaremos el nombre de nuestra aplicación.</p>
+<p>Siguiendo con el formulario encontraremos al final un campo llamado &#34;<strong>Opciones avanzadas</strong>&#34;, haremos click allí y se nos mostrará lo siguiente:</p>
+<p><img style="max-width: 624.00px" src="img/62aaab737160dbe3.png"></p>
+<p>Todos los campos en este cuadro son opcionales, sin embargo, para efectos de este codelab, llenaremos el campo &#34;<strong>Título</strong>&#34; con algún término que queramos usar de título de nuestro mensaje.</p>
+<p>Luego, daremos click en &#34;<strong>Enviar mensaje</strong>&#34;, lo siguiente será este cuadro de diálogo:</p>
+<p><img style="max-width: 624.00px" src="img/d3b49258e037cbc5.png"></p>
+<p>Este cuadro de diálogo nos ayuda a hacer una revisión del tiempo de entrega, fecha y hora de vencimiento y hacia dónde será enviado el mensaje. Si todo está conforme, hacer click en &#34;<strong>Enviar</strong>&#34;.</p>
+<p>Finalmente nos aparecerá el listado de mensajes enviados:</p>
+<p><img style="max-width: 624.00px" src="img/55164dd319bf9c21.png"></p>
+<p>Y en nuestra app debería aparecer lo siguiente:</p>
+<p><img style="max-width: 515.50px" src="img/3dedfdc7fc69efe2.png"></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Reconocimiento de caras y la felicidad de las personas" duration="0">
+        <p>ML Kit es una librería de machine learning para los desarrolladores de dispositivos móviles como Android o iOS de manera fácil que fue presentada en Google I/O 18. Esta librería tiene las siguientes APIs que se pueden integrar en las aplicaciones:</p>
+<p><img style="max-width: 393.00px" src="img/5b04c2b587c29b37.png"></p>
+<p><img style="max-width: 380.00px" src="img/4732f23cc11f5897.png"></p>
+<p><img style="max-width: 382.00px" src="img/9c56e6db1bb9c7dc.png"></p>
+<p><img style="max-width: 467.72px" src="img/6612b6fb812588fc.png"></p>
+<p><img style="max-width: 411.56px" src="img/d33ca71fba03f776.png"></p>
+<h2><strong>Face detection</strong></h2>
+<p>Face detection es una API, donde podras detectar rostros que se encuentren en una imagen e identificar sus principales características que son:</p>
+<ul>
+<li>Reconocer y localizar características faciales</li>
+<li>Reconocer expresiones faciales.</li>
+<li>Seguir una cara en un video.</li>
+<li>Procesar un video en tiempo real.</li>
+</ul>
+<p>La aplicación que se realizara en este codelab podrá tomar una foto e identificar las caras de las personas que se encuentran en esa foto, mostrar el porcentaje de la apertura del ojo izquierdo y derecho y el porcentaje de la felicidad de la persona.</p>
+<p>Actualmente la aplicación tiene un botón para ir a la pantalla, donde si se presiona el botón &#34;Tomar Foto&#34; solo toma la foto y lo muestra en la pantalla.</p>
+<h2>Instalar Librería</h2>
+<p>Entonces, primero en el <code>build.gradle</code> se deberá ingresar la librería de la siguiente manera.</p>
+<p>Reemplaza esta linea</p>
+<pre><code>//Firebase ML Kit</code></pre>
+<p>Por estas</p>
+<pre><code>//Firebase ML Kit
+implementation &#39;com.google.firebase:firebase-ml-vision:17.0.1&#39;</code></pre>
+<p>Además, debemos agregar en el <code>AndroidManifest.xml</code> que API del ML KIT usaremos, para ello esto se ingresa de la siguiente manera para el caso del API face detection.</p>
+<p>Reemplaza esta linea</p>
+<pre><code>&lt;!--Ingresar la dependencia de ML KIT--&gt;</code></pre>
+<p>Por esta</p>
+<pre><code>&lt;meta-data
+   android:name=&#34;com.google.firebase.ml.vision.DEPENDENCIES&#34;
+   android:value=&#34;face&#34; /&gt;</code></pre>
+<h2><strong>Inicializar librería</strong></h2>
+<p>El primer paso es inicializar las opciones de la librería, para ello se ingresara el siguiente codigo en la clase <code>FaceDetectionFirebase.kt</code> que se encuentra en la carpeta utils</p>
+<p>Reemplaza esta linea</p>
+<pre><code>/** Opciones de la libreria */</code></pre>
+<p>Por esto</p>
+<pre><code>/** Opciones de la libreria */
+val options = FirebaseVisionFaceDetectorOptions.Builder()
+       .setModeType(FirebaseVisionFaceDetectorOptions.ACCURATE_MODE)
+       .setLandmarkType(FirebaseVisionFaceDetectorOptions.ALL_LANDMARKS)
+       .setClassificationType(FirebaseVisionFaceDetectorOptions.ALL_CLASSIFICATIONS)
+       .setMinFaceSize(0.15f)
+       .setTrackingEnabled(true)
+       .build()</code></pre>
+<p>El segundo paso es obtener la imagen que se ha tomado , para ello primero debemos enviar la imagen tomada desde la clase <code>MLActivity.kt</code> a la clase <code>FaceDetectionFirebase.kt </code></p>
+<p>Reemplaza esto</p>
+<pre><code>pb.visibility = View.GONE
+mCameraButton.isEnabled=true
+/**Lógica para detectar rostros de la imagen*/</code></pre>
+<p>Por esto</p>
+<pre><code>/**Lógica para detectar rostros de la imagen*/
+mGraphicOverlay.setCameraInfo(ivPhoto.drawable.intrinsicWidth,ivPhoto.drawable.intrinsicHeight)
+FaceDetectionFirebase(mGraphicOverlay).runFaceRecognition(bitmap) { callback-&gt;
+   /**Lógica para mostrar mensajes*/
+   pb.visibility=View.GONE
+   mCameraButton.isEnabled=true
+}</code></pre>
+<p>Luego en <code>FacedetectionFirebase.kt</code></p>
+<p>Reemplaza esta linea</p>
+<pre><code>/** Obtener la imagen tomada de la camara*/</code></pre>
+<p>Por esto</p>
+<pre><code>/** Obtener la imagen tomada de la camara*/
+val image = FirebaseVisionImage.fromBitmap(bitmap)</code></pre>
+<aside class="special"><p><strong>Recuerda</strong>: La librería puede obtener la imagen desde un bitmap, desde una imagen almacenada en el dispositivo, desde un ByteBuffer o desde un FilePath.</p>
+</aside>
+<p>El tercer paso es instanciar la librería en la clase <code>FaceDetectionFirebase.kt</code></p>
+<p>Reemplaza esto</p>
+<pre><code>/** Instanciar la libreria */</code></pre>
+<p>Por esto</p>
+<pre><code>/** Instanciar la libreria */
+val detector = FirebaseVision.getInstance().getVisionFaceDetector(options)</code></pre>
+<h2><strong>Obtener Rostros</strong></h2>
+<p>En la clase <code>FaceDetectionFirebase.kt</code></p>
+<p>Reemplaza esto</p>
+<pre><code>/** Detectar caras en la imagen */</code></pre>
+<p>Por esto</p>
+<pre><code>/** Detectar caras en la imagen */
+detector.detectInImage(image)
+       .addOnSuccessListener{ mensaje -&gt;
+           processFaceRecognitionResult(mensaje){
+               callback(it) /** Retornar el mensaje de la funcion */
+               detector.close()
+           }
+       }
+       .addOnFailureListener{
+           callback(it.toString()) /** Retornar el error de Firebase */
+           detector.close()
+       }</code></pre>
+<p>Y reemplaza esto</p>
+<pre><code>/** Funcion para dibujar Caras */</code></pre>
+<p>Por esto</p>
+<pre><code>/** Funcion para dibujar Caras */
+private fun processFaceRecognitionResult(firebaseVisionList: List&lt;FirebaseVisionFace&gt;,callback:(String)-&gt;Unit){
+
+   /** Limpiar la pantalla de lo anteriormente dibujado */
+   mGraphicOverlay.clear()
+
+   /** Comprobar que hay caras en la imagen */
+   if (firebaseVisionList.isEmpty()) {
+       callback(&#34;No se han detectado caras&#34;) /** Retornar que no se encontro caras */
+       return
+   }
+
+   /** Logica para dibujar cada cara */
+
+   callback(&#34;true&#34;) /** Retornar que fue exitoso */
+}</code></pre>
+<h2><strong>Dibujar Rostros</strong></h2>
+<p>Para dibujar un cuadrado en cada rostro detectado se creará una clase llamada <code>FaceGraphic.kt</code> en la carpeta utils.</p>
+<p>Ingresar el siguiente código en la clase <code>FaceGraphic.kt</code></p>
+<pre><code>class FaceGraphic(overlay: GraphicOverlay,mostrarLandmarks: Boolean) : Graphic(overlay) {
+
+   private var facing: Int = 0
+
+   private val facePositionPaint: Paint
+   private val idPaint: Paint
+   private val boxPaint: Paint
+   private var mostrarLandmarks = false
+
+
+
+   @Volatile
+   private var firebaseVisionFace: FirebaseVisionFace? = null
+
+   /** Instanciar las variables que no se modificaran despues*/
+   companion object {
+       private val FACE_POSITION_RADIUS = 10.0f
+       private val ID_TEXT_SIZE = 40.0f
+       private val ID_Y_OFFSET = 50.0f
+       private val ID_X_OFFSET = -50.0f
+       private val BOX_STROKE_WIDTH = 5.0f
+       private val COLOR_CHOICES = intArrayOf(Color.BLUE, Color.CYAN, Color.GREEN, Color.MAGENTA, Color.RED, Color.WHITE, Color.YELLOW)
+       private var currentColorIndex = 0
+   }
+
+   /** Obtener el color para el cuadrado y los puntos de la cara */
+   init {
+
+       this.mostrarLandmarks = mostrarLandmarks
+       currentColorIndex = (currentColorIndex + 1) % COLOR_CHOICES.size
+       val selectedColor = COLOR_CHOICES[currentColorIndex]
+
+       facePositionPaint = Paint()
+       facePositionPaint.color = selectedColor
+
+       idPaint = Paint()
+       idPaint.color = selectedColor
+       idPaint.textSize = ID_TEXT_SIZE
+
+       boxPaint = Paint()
+       boxPaint.color = selectedColor
+       boxPaint.style = Paint.Style.STROKE
+       boxPaint.strokeWidth = BOX_STROKE_WIDTH
+   }
+
+
+   /**
+    * Agrega las caras detectadas al Canvas
+    */
+   fun updateFace(face: FirebaseVisionFace, facing: Int) {
+       firebaseVisionFace = face
+       this.facing = facing
+       postInvalidate()
+   }
+
+   /** Dibuja el cuadrado y los puntos de la cara en el Canvas  */
+   override fun draw(canvas: Canvas) {
+       val face = firebaseVisionFace ?: return
+
+       val x = translateX(face.boundingBox.centerX().toFloat())
+       val y = translateY(face.boundingBox.centerY().toFloat())
+
+       drawFaceSquare(canvas,face,x,y)
+
+       if(mostrarLandmarks) {
+           canvas.drawCircle(x, y, FACE_POSITION_RADIUS, facePositionPaint)
+           drawText(canvas,&#34;id: &#34; + face.trackingId, x + ID_X_OFFSET, y + ID_Y_OFFSET)
+           drawText(canvas,&#34;happiness: &#34; + String.format(&#34;%.2f&#34;, face.smilingProbability), x + ID_X_OFFSET * 3, y - ID_Y_OFFSET)
+
+           /** Logica de los ojos segun la camara que se este usando */
+           if (facing == CameraSource.CAMERA_FACING_FRONT) {
+               drawText(canvas,&#34;right eye: &#34; + String.format(&#34;%.2f&#34;, face.rightEyeOpenProbability), x - ID_X_OFFSET, y)
+               drawText(canvas,&#34;left eye: &#34; + String.format(&#34;%.2f&#34;, face.leftEyeOpenProbability), x + ID_X_OFFSET * 6, y)
+           } else {
+               drawText(canvas,&#34;left eye: &#34; + String.format(&#34;%.2f&#34;, face.leftEyeOpenProbability), x - ID_X_OFFSET, y)
+               drawText(canvas,&#34;right eye: &#34; + String.format(&#34;%.2f&#34;, face.rightEyeOpenProbability), x + ID_X_OFFSET * 6, y)
+           }
+           drawLandmarksFace(canvas,face)
+       }
+   }
+
+   private fun drawText(canvas: Canvas,string:String, x:Float, y:Float){
+       canvas.drawText(string,x,y,idPaint)
+   }
+
+   /** Dibuja el cuadrado alrededor de la cara*/
+   private fun drawFaceSquare(canvas: Canvas,face:FirebaseVisionFace, x:Float, y:Float){
+       val xOffset = scaleX(face.boundingBox.width() / 2.0f)
+       val yOffset = scaleY(face.boundingBox.height() / 2.0f)
+       val left = x - xOffset
+       val top = y - yOffset
+       val right = x + xOffset
+       val bottom = y + yOffset
+       canvas.drawRect(left, top, right, bottom, boxPaint)
+   }
+
+   /** Dibuja en la cara los diferentes puntos que detecta la libreria de firebase */
+   private fun drawLandmarksFace(canvas: Canvas,face: FirebaseVisionFace){
+       drawLandmarkPosition(canvas, face, FirebaseVisionFaceLandmark.BOTTOM_MOUTH)
+       drawLandmarkPosition(canvas, face, FirebaseVisionFaceLandmark.LEFT_CHEEK)
+       drawLandmarkPosition(canvas, face, FirebaseVisionFaceLandmark.LEFT_EAR)
+       drawLandmarkPosition(canvas, face, FirebaseVisionFaceLandmark.LEFT_MOUTH)
+       drawLandmarkPosition(canvas, face, FirebaseVisionFaceLandmark.LEFT_EYE)
+       drawLandmarkPosition(canvas, face, FirebaseVisionFaceLandmark.NOSE_BASE)
+       drawLandmarkPosition(canvas, face, FirebaseVisionFaceLandmark.RIGHT_CHEEK)
+       drawLandmarkPosition(canvas, face, FirebaseVisionFaceLandmark.RIGHT_EAR)
+       drawLandmarkPosition(canvas, face, FirebaseVisionFaceLandmark.RIGHT_EYE)
+       drawLandmarkPosition(canvas, face, FirebaseVisionFaceLandmark.RIGHT_MOUTH)
+   }
+
+   /** Dibuja los puntos */
+   private fun drawLandmarkPosition(canvas: Canvas, face: FirebaseVisionFace, landmarkID: Int) {
+       val landmark = face.getLandmark(landmarkID)
+       if (landmark != null) {
+           val point = landmark.position
+           canvas.drawCircle(
+                   translateX(point.x!!),
+                   translateY(point.y!!),
+                   10f, idPaint)
+       }
+   }
+}</code></pre>
+<p>Y en la clase <code>FaceDetectionFirebase.kt</code> reemplazar esto</p>
+<pre><code>/** Logica para dibujar cada cara */</code></pre>
+<p>Por esto</p>
+<pre><code>/** Logica para dibujar cada cara */
+for(i in firebaseVisionList){
+   val textGraphic = FaceGraphic(mGraphicOverlay,true)
+   textGraphic.updateFace(i,0)
+   mGraphicOverlay.add(textGraphic)
+}</code></pre>
+<h2><strong>Mostrar Mensajes</strong></h2>
+<p>Se mostraran mensajes en la pantalla si no se encontraron rostros o si hubo algun error con la libreria, para ello en la clase <code>MLActivity.kt </code></p>
+<p>Reemplaza esto</p>
+<pre><code>/**Lógica para mostrar mensajes*/</code></pre>
+<p>Por esto</p>
+<pre><code>/**Lógica para mostrar mensajes*/
+when(callback) {
+   &#34;true&#34;-&gt;{}
+   else-&gt;{
+       Toast.makeText(applicationContext,callback, Toast.LENGTH_SHORT).show()
+       mGraphicOverlay.clear()
+       ivPhoto.setImageDrawable(null)
+   }
+}</code></pre>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Terminaste el codelab" duration="0">
+        <p>Gracias por probar el codelab de Android + Firebase, ahora intenta algo de tu imaginacion.</p>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-49880327-14', 'auto');
+
+    (function() {
+      var gaCodelab = '';
+      if (gaCodelab) {
+        ga('create', gaCodelab, 'auto', {name: 'codelab'});
+      }
+
+      var gaView;
+      var parts = location.search.substring(1).split('&');
+      for (var i = 0; i < parts.length; i++) {
+        var param = parts[i].split('=');
+        if (param[0] === 'viewga') {
+          gaView = param[1];
+          break;
+        }
+      }
+      if (gaView && gaView !== gaCodelab) {
+        ga('create', gaView, 'auto', {name: 'view'});
+      }
+    })();
+  </script>
+
+</body>
+</html>
